@@ -30,7 +30,7 @@ class Parent(models.Model):
 
 class child (models.Model):
     name = models.CharField(max_length=50)
-    parent = models.models.ManyToManyField(Parent, null = False,blank = False)
+    parent = models.ManyToManyField(Parent, null = False,blank = False)
     age = models.IntegerField ()
     gender = models.CharField (max_length=50)
     description = models.TextField
