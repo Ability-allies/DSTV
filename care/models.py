@@ -32,3 +32,7 @@ class TherapySession(models.Model):
     
     def __str__(self):
         return f"Therapy for {self.get_category_display()} - {self.date}"
+
+
+class journal (models.Model):
+    child = models.

@@ -7,28 +7,28 @@ from django.utils.timezone import make_aware
 from PyPDF2 import PdfReader
 import time
 
+# Load environment variables and setup Django
 load_dotenv()
-
-# Set up environment variables for Django settings
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "disable.settings")
-
-# Now import Django and set it up
 django.setup()
 
-# Load environment variables
+# Check if API key and endpoint are loaded
 azure_openai_key = os.getenv("AZURE_OPENAI_KEY")
 azure_openai_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
-
-# Check if API key is loaded
 if not azure_openai_key or not azure_openai_endpoint:
     raise ValueError("Azure OpenAI key or endpoint not found.")
 
-# Import models after setting up Django
-from care.models import Advice, TherapySession
+# Import Django models
+from users.models import Advice, TherapySession, Child, Parent
 
-# Set up the categories for the app
-CATEGORIES = ["expecting a baby", "new parents", "preschool and primary school", 
-              "secondary school", "young people", "adults"]
+CATEGORIES = [
+    ('expecting_a_baby', 'Expecting a Baby'),
+    ('new_parents', 'New Parents'),
+    ('preschool_primary_school', 'Preschool and Primary School'),
+    ('secondary_school', 'Secondary School'),
+    ('young_people', 'Young People'),
+    ('adults', 'Adults'),
+]
 
 def extract_text_from_pdf(pdf_path):
     """Extract text from a PDF file."""
@@ -42,81 +42,84 @@ def extract_text_from_pdf(pdf_path):
         print(f"Error reading {pdf_path}: {e}")
     return text
 
-def load_pdfs_and_generate_advice(directory):
-    api_key = os.getenv("AZURE_OPENAI_API_KEY")  # Ensure your API key is set in the environment
-    endpoint = "https://desai.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2024-08-01-preview"
-    
-    # Set the rate limit parameters
-    tokens_per_minute = 1000  # Your quota
-    requests_per_minute = 6    # 1K tokens / 150 tokens per request (estimate)
-    delay_between_requests = 60 / requests_per_minute  # Delay in seconds between requests
-
-    for pdf_file in os.listdir(directory):
-        if pdf_file.endswith('.pdf'):
-            pdf_path = os.path.join(directory, pdf_file)
-            print(f"Processing: {pdf_path}")
-
-            with open(pdf_path, 'rb') as f:
-                pdf_reader = PdfReader(f)
-                pdf_text = ''
-                for page in pdf_reader.pages:
-                    pdf_text += page.extract_text() + '\n'
-
-            data = {
-                "messages": [
-                    {"role": "user", "content": pdf_text}
-                ],
-                "max_tokens": 1000,  # Adjust based on your needs
-            }
-            headers = {
-                "Content-Type": "application/json",
-                "api-key": api_key,
-            }
-
-            retries = 0
-            while retries < 5:
-                try:
-                    response = requests.post(endpoint, headers=headers, json=data, timeout=30)
-                    response.raise_for_status()
-                    
-                    # Check for 401 error
-                    if response.status_code == 401:
-                        print("Authorization failed. Please check your API key and deployment.")
-                        break
-                    
-                    advice = response.json()
-                    print(f"Advice for {pdf_file}: {advice}")
-
-                    # Wait before making the next request to adhere to the rate limit
-                    time.sleep(delay_between_requests)
-                    break  # Exit the retry loop if successful
-                
-                except requests.exceptions.RequestException as e:
-                    print(f"Error generating advice for {pdf_path}: {e}")
-                    if 'Connection aborted' in str(e) or 'RemoteDisconnected' in str(e):
-                        time.sleep(2 ** retries)
-                        retries += 1
-                        print(f"Retrying... Attempt {retries}")
-                    else:
-                        break
-
-# Helper function to determine the category based on content
 def determine_category(content):
     """Determine the category based on content keywords."""
     keywords = {
-        "expecting a baby": ["baby", "expecting", "pregnancy"],
-        "new parents": ["parent", "new parents", "first-time"],
-        "preschool and primary school": ["preschool", "primary", "kindergarten"],
-        "secondary school": ["teen", "secondary", "high school"],
-        "young people": ["young", "youth", "adolescent"]
+        "expecting_a_baby": ["baby", "expecting", "pregnancy"],
+        "new_parents": ["parent", "new parents", "first-time"],
+        "preschool_primary_school": ["preschool", "primary", "kindergarten"],
+        "secondary_school": ["teen", "secondary", "high school"],
+        "young_people": ["young", "youth", "adolescent"],
+        "adults": ["adult", "mature"]
     }
 
     content_lower = content.lower()
     for category, words in keywords.items():
         if any(word in content_lower for word in words):
             return category
-
     return "adults"  # Default category if not matched
 
-# Run the script
-load_pdfs_and_generate_advice("/mnt/c/Users/Roy Agoya/OneDrive/Documents/dsai primary school")
+def load_pdfs_and_generate_advice(directory, child):
+    api_key = azure_openai_key
+    endpoint = azure_openai_endpoint
+    
+    # Rate limiting parameters
+    tokens_per_minute = 1000
+    requests_per_minute = 6
+    delay_between_requests = 60 / requests_per_minute
+
+    for pdf_file in os.listdir(directory):
+        if pdf_file.endswith('.pdf'):
+            pdf_path = os.path.join(directory, pdf_file)
+            print(f"Processing: {pdf_path}")
+
+            pdf_text = extract_text_from_pdf(pdf_path)
+            data = {
+                "messages": [{"role": "user", "content": pdf_text}],
+                "max_tokens": 1000,
+            }
+            headers = {"Content-Type": "application/json", "api-key": api_key}
+            
+            retries = 0
+            while retries < 5:
+                try:
+                    response = requests.post(endpoint, headers=headers, json=data, timeout=30)
+                    response.raise_for_status()
+                    if response.status_code == 401:
+                        print("Authorization failed. Check API key and endpoint.")
+                        break
+                    
+                    response_data = response.json()
+                    advice_content = response_data['choices'][0]['message']['content']
+                    category = determine_category(advice_content)
+                    current_date = make_aware(datetime.now())
+                    
+                    # Populate the Advice model
+                    advice = Advice(                        
+                        date=current_date,
+                        category=category,
+                        advice=advice_content
+                    )
+                    advice.save()
+                    print(f"Saved advice for {child.name} on {current_date}")
+
+                    # Populate the TherapySession model
+                    therapy_session = TherapySession(                        
+                        date=current_date,
+                        category=category,
+                        therapy_content=advice_content  # Replace with actual therapy content if different
+                    )
+                    therapy_session.save()
+                    print(f"Saved therapy session for {child.name} on {current_date}")
+
+                    time.sleep(delay_between_requests)
+                    break  # Exit retry loop if successful
+
+                except requests.exceptions.RequestException as e:
+                    print(f"Error: {e}")
+                    retries += 1
+                    time.sleep(2 ** retries)  # Exponential backoff for retries
+
+# Run the script with a specific child and directory
+child = Child.objects.first()  # Replace with specific child lookup if needed
+load_pdfs_and_generate_advice("/mnt/c/Users/Roy Agoya/OneDrive/Documents/dsai primary school", child)
