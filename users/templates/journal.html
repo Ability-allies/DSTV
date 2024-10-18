@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Journal</title>
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Daily Journal</h2>
+        
+        <form method="post" action="{% url 'journal' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="journal-entry">What happened today?</label>
+                <textarea id="journal-entry" name="entry" rows="5" placeholder="What happened today..." required></textarea>
+            </div>
+
+            <button type="submit">Save Journal Entry</button>
+        </form>
+
+        <a href="{% url 'calendar' %}">Back to Calendar</a>
+    </div>
+</body>
+</html>

@@ -4,8 +4,8 @@ from .models import Parent, Child, Advice, TherapySession, Journal
 # Register the Parent model
 @admin.register(Parent)
 class ParentAdmin(admin.ModelAdmin):
-    list_display = ('user', 'address', 'phone_number', 'latitude', 'longitude')
-    search_fields = ('user__username', 'address')
+    list_display = ('user', 'phone_number')
+    
     list_filter = ('user',)
     ordering = ('user',)
 

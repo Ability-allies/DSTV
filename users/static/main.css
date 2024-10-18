@@ -1,0 +1,289 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    color: #34495E;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #34495E;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.input-group input:focus {
+    border-color: #5BC0EB; /* Change border color on focus */
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #FBD46D; /* Soft yellow */
+    color: #34495E; /* Dark gray text */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #5BC0EB; /* Change button color on hover */
+}
+
+p {
+    text-align: center;
+}
+
+a {
+    color: #5BC0EB; /* Soft blue */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Calendar Styles */
+.calendar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    width: 100%;
+}
+
+.calendar-day {
+    padding: 15px;
+    text-align: center;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.calendar-day:hover {
+    background-color: #5BC0EB; /* Change background color on hover */
+}
+
+/* Journal Styles */
+.journal-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.journal-section {
+    margin-bottom: 20px;
+}
+
+.journal-section label {
+    display: block;
+    margin-bottom: 5px;
+    color: #34495E;
+}
+
+.journal-section textarea {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.journal-section textarea:focus {
+    border-color: #5BC0EB; /* Change border color on focus */
+    outline: none;
+}
+
+/* Care Plan Styles */
+.care-plan-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Activity Styles */
+.activity-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Child Details Styles */
+.child-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #E0F7FA; /* Light blue background */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}    
+
+.child-container h2 {
+    text-align: center;
+    color: #34495E;
+}
+
+.child-input-group {
+    margin-bottom: 15px;
+}
+
+.child-input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #34495E;
+}
+
+.child-input-group input,
+.child-input-group select,
+.child-input-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.child-input-group textarea {
+    height: 150px; /* Adjust height for description */
+}
+
+.child-input-group input:focus,
+.child-input-group select:focus,
+.child-input-group textarea:focus {
+    border-color: #5BC0EB; /* Change border color on focus */
+    outline: none;
+}
+
+.child-submit-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #FBD46D; /* Soft yellow */
+    color: #34495E; /* Dark gray text */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.child-submit-button:hover {
+    background-color: #5BC0EB; /* Change button color on hover */
+}
+
+.child-feedback {
+    margin-top: 20px;
+    color: #34495E;
+    font-style: italic;
+}
+
+/* Login Page Styles */
+.login-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #E0F7FA; /* Light blue background */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.login-container h2 {
+    text-align: center;
+    color: #34495E; /* Dark gray text */
+}
+
+.login-input-group {
+    margin-bottom: 15px;
+}
+
+.login-input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #34495E;
+}
+
+.login-input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.login-input-group input:focus {
+    border-color: #5BC0EB; /* Change border color on focus */
+    outline: none;
+}
+
+.login-submit-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #FBD46D; /* Soft yellow */
+    color: #34495E; /* Dark gray text */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.login-submit-button:hover {
+    background-color: #5BC0EB; /* Change button color on hover */
+}
+
+.login-feedback {
+    margin-top: 20px;
+    color: #34495E;
+    font-style: italic;
+    text-align: center;
+}
+
+
+/* Additional styles for sections can be added here */

@@ -2,7 +2,7 @@ from django.urls import path
 from .views import SignupView,activity_view,calendar_view,journal_view,login_view,submit_child_details
 
 urlpatterns = [
-    path('signup/', SignupView.as_view(), name='signup'),
+    path('', SignupView.as_view(), name='signup'),
     path('activity/<int:year>/<int:month>/<int:day>/', activity_view, name='activity'),
     path('calendar/', calendar_view, name='calendar'),  # current month
     path('calendar/<int:year>/<int:month>/', calendar_view, name='calendar'),  # specific month

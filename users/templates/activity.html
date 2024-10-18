@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity</title>
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Activity for Today</h2>
+        
+        <div id="date-info">
+            {{ date_info }} <!-- Render date dynamically -->
+        </div>
+
+        <div class="advice">
+            <h3>Advice</h3>
+            <p>{{ advice_text }}</p> <!-- Render advice dynamically -->
+        </div>
+
+        <div class="therapy">
+            <h3>Therapy Session</h3>
+            <p>{{ therapy_text }}</p> <!-- Render therapy content dynamically -->
+        </div>
+
+        <a href="{% url 'calendar' %}">Back to Calendar</a>
+    </div>
+
+</body>
+</html>
