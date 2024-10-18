@@ -54,7 +54,7 @@ class Advice(models.Model):
         # unique_together = ['child', 'date']
 
     def __str__(self):
-        return f"{self.get_category_display()} - {self.date}"
+        return f"Advice for {self.date}: {self.advice}"
 
 
 class TherapySession(models.Model):
@@ -68,7 +68,7 @@ class TherapySession(models.Model):
         # unique_together = ['child', 'date']
 
     def __str__(self):
-        return f"Therapy for {self.get_category_display()} - {self.date}"
+        return f"Therapy for {self.date}: {self.therapy_content}"
 
 
 class Journal(models.Model):
