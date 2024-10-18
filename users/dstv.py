@@ -47,7 +47,7 @@ def determine_category(content):
     return "adults"  # Default category if not matched
 
 def generate_advice_and_therapy(child, pdf_directory=None, entry_date=None):
-    """Generate advice and therapy for the given child based on their description and optional PDFs."""
+    """You're a healthcare expert for children with down syndrome. Generate daily advice and a aily programme to help with their speech,cognitive and emotional development therapy.The advice and therapy must be continous(it connects to the next day.)Use the pdfs and your knowledge,combined with the child's description to do this."""
     description = child.description
     current_date = entry_date or make_aware(datetime.now())
     print(f"Generating advice for date: {current_date}")
