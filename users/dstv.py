@@ -50,7 +50,6 @@ def generate_advice_and_therapy(child, pdf_directory=None, entry_date=None):
     """Generate advice and therapy for the given child based on their description and optional PDFs."""
     description = child.description
     current_date = entry_date or make_aware(datetime.now())
-    
     print(f"Generating advice for date: {current_date}")
 
     # Optionally load and process PDFs if the directory is provided
@@ -64,7 +63,7 @@ def generate_advice_and_therapy(child, pdf_directory=None, entry_date=None):
 
     # Combine child's description and any extracted PDF text
     combined_content = description + "\n" + pdf_text
-    print(f"Combined content for OpenAI API: {combined_content[:100]}...")  # Print first 100 chars
+    print(f"Combined content for API: {combined_content[:50]}...")  # Print the first 50 chars for brevity
 
     data = {
         "model": "gpt-3.5-turbo",
@@ -82,7 +81,6 @@ def generate_advice_and_therapy(child, pdf_directory=None, entry_date=None):
 
         response_data = response.json()
         advice_content = response_data['choices'][0]['message']['content']
-        print(f"Advice generated: {advice_content[:100]}...")  # Print first 100 chars
         category = determine_category(advice_content)
 
         # Populate Advice model
@@ -92,7 +90,7 @@ def generate_advice_and_therapy(child, pdf_directory=None, entry_date=None):
             advice=advice_content
         )
         advice.save()
-        print(f"Saved advice for {current_date} in category '{category}'.")
+        print(f"Saved advice for date: {current_date}")
 
         # Populate TherapySession model
         therapy_session = TherapySession(
@@ -101,27 +99,24 @@ def generate_advice_and_therapy(child, pdf_directory=None, entry_date=None):
             therapy_content=advice_content  # This can be adapted for more specific therapy content
         )
         therapy_session.save()
-        print(f"Saved therapy session for {current_date} in category '{category}'.")
+        print(f"Saved therapy session for date: {current_date}")
 
     except requests.exceptions.RequestException as e:
         print(f"Error generating advice and therapy: {e}")
 
 def populate_advice_for_year(child, pdf_directory=None):
     """Populate advice and therapy for each day of the year for the given child."""
-    # Start from today or a specific date
     start_date = datetime.now()
-    
-    print(f"Populating advice for the year starting from {start_date}")
 
     for day in range(365):
         # Calculate the date for this entry
         current_date = make_aware(start_date + timedelta(days=day))
-        print(f"Processing entry for day {day + 1}: {current_date}")
-
+        print(f"Creating entry for: {current_date}")
+        
         # Call the function to generate advice and therapy
         generate_advice_and_therapy(child, pdf_directory, current_date)
 
-# Usage example (you need to replace this with your actual child instance)
+# Usage example (replace this with your actual child instance)
 # child = Child.objects.get(id=1)  # Assuming you have a Child model
 # pdf_directory = 'path/to/pdf_directory'  # Adjust as needed
 # populate_advice_for_year(child, pdf_directory)
