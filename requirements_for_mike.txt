@@ -1,9 +1,0 @@
-django
-python-dotenv
-openai
-PyPDF2
-requests
-djangorestframework
-django-cors-headers
-django-rest-authtoken
-whitenoise
