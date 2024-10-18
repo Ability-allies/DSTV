@@ -34,5 +34,3 @@ class TherapySession(models.Model):
         return f"Therapy for {self.get_category_display()} - {self.date}"
 
 
-class journal (models.Model):
-    child = models.
