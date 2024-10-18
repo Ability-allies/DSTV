@@ -44,7 +44,7 @@ CATEGORIES = [
 ]
 
 class Advice(models.Model):
-    # child = models.ForeignKey(Child, on_delete=models.CASCADE)
+    child = models.ForeignKey(Child, on_delete=models.CASCADE)
     date = models.DateField()
     category = models.CharField(max_length=30, choices=CATEGORIES)
     advice = models.TextField()

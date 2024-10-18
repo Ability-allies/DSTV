@@ -32,16 +32,16 @@ def submit_child_details(request):
 
         # Redirect to the same form with feedback
         feedback = f'Child {name} has been successfully registered.'
-        return render(request, 'child.html', {'feedback': feedback})
+        return render(request, 'users/child.html', {'feedback': feedback})
 
-    return render(request, 'child.html')
+    return render(request, 'users/child.html')
 
 
 
 
 class SignupView(CreateView):
     form_class = UserCreationForm
-    template_name = 'signup.html'
+    template_name = 'users/signup.html'
     success_url = reverse_lazy('login')
 
 
@@ -58,7 +58,7 @@ def activity_view(request, year, month, day):
         'therapy_text': therapy_session.therapy_content if therapy_session else 'No therapy session for today.'
     }
 
-    return render(request, 'activity.html', context)
+    return render(request, 'users/activity.html', context)
 
 
 def calendar_view(request, year=None, month=None):
@@ -78,7 +78,7 @@ def calendar_view(request, year=None, month=None):
         'calendar': month_days,
     }
 
-    return render(request, 'calendar.html', context)
+    return render(request, 'users/calendar.html', context)
 
 
 @login_required
@@ -97,9 +97,9 @@ def journal_view(request):
             entry=entry,
             time=timezone.now()
         )
-        return redirect('calendar')  # Redirect back to the calendar after saving the entry
+        return redirect('users/calendar')  # Redirect back to the calendar after saving the entry
 
-    return render(request, 'journal.html')
+    return render(request, 'users/journal.html')
 
 
 def login_view(request):
@@ -110,11 +110,23 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            return redirect('dashboard')  # Assuming you have a dashboard page
+
+            # Check if the user is a Parent
+            try:
+                parent = Parent.objects.get(user=user)
+                
+                # Check if the parent has any associated children
+                if not Child.objects.filter(parent=parent).exists():
+                    return redirect('submit_child_details')  # Redirect to the child submission form
+
+            except Parent.DoesNotExist:
+                messages.error(request, 'User is not a parent.')
+
+            return redirect('calendar')  # Redirect to the calendar page
         else:
             messages.error(request, 'Invalid email or password')
 
-    return render(request, 'login.html')
+    return render(request, 'users/login.html')
 
 
 

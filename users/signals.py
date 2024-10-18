@@ -11,6 +11,6 @@ def generate_advice_for_new_child(sender, instance, created, **kwargs):
     if created:
         print(f"New child registered: {instance.name}")
         # Specify the directory containing the PDFs
-        pdf_directory = "C:\\Users\\Roy Agoya\\Desktop\\disable"  # Adjust this to your PDF folder
+        pdf_directory = "C:\\Users\\Roy Agoya\\Desktop\\disability\\disable\\dsai primary school"
         # Generate advice and therapy for the newly created child
         populate_advice_for_year(instance, pdf_directory=pdf_directory)  # Call the updated function
